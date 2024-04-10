@@ -57,6 +57,7 @@ function App() {
       console.log(weatherData)
     } catch (error) {
       console.error('Error loading Weather Data:', error);
+      alert("Error loading Weather Data due to Bad Network")
     }
   };
 
@@ -77,6 +78,7 @@ function App() {
       }
     } catch (error) {
       console.error('Error fetching reverse geocoding data:', error);
+      alert("Error fetching user Location  due to Bad Network")
       console.log(userLocation);
       console.log(addressData);
      
