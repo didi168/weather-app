@@ -34,7 +34,7 @@ const Icon = styled.i`
 `;
 
 const FirstSection = styled.div`
-  height: 83vh;
+  height: 90vh;
   display:flex;
   align-items:center;
   justify-content:space-evenly;
@@ -64,8 +64,13 @@ const FirstSection = styled.div`
     width:fit-content;
     margin 0 auto;
     padding:0 ;
+   
   }
 
+  @media screen and (max-width: 900px) {
+    flex-direction:column;
+   
+  }
 `;
 
 const FirstDiv = styled.div`
@@ -78,7 +83,11 @@ const FirstDiv = styled.div`
   position:relative;
   padding:-50% 0px 0px 0px ;
 
-
+.location{
+  position:absolute;
+  top:0;
+  left:0;
+}
   div:nth-of-type(1){
     width:100%;
     height:60%;
@@ -86,6 +95,7 @@ const FirstDiv = styled.div`
     flex-direction:column;
     align-items:center;
     justify-content:center;
+    
  
 
   }
@@ -95,6 +105,7 @@ const FirstDiv = styled.div`
     flex-direction:column;
     justify-content:center;
     margin:-1% 0px 0px 0px ;
+    
   }
 div:nth-of-type(1) section h1{
   font-size:300%;
@@ -165,7 +176,11 @@ const SecondDiv = styled.div`
   justify-content:space-around;
   gap:10px;
 
-
+ @media screen and (max-width: 900px) {
+  width:90%;
+  height:fit-content;
+  padding-block:100px;
+ }
 
   section{    
     width:40%;
