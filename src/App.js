@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios'
 import { Header, ListItem, Icon, FirstSection, FirstDiv, SecondDiv } from './App.styled';
 import RainCloud from '../src/images/rain-storm.png';
 import SunnyRain from '../src/images/sunny-rain.png';
 import ThundeStorm from '../src/images/thunder-storm.png';
 import Sun from '../src/images/sun.png';
+
+
+
 
 
 
@@ -16,37 +19,34 @@ function App() {
   const [addressData, setAddressData] = useState({ city: '', country: '', state: '' });
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [imageSrc, setImageSrc] = useState(null);
+  const [imageSrc, setImageSrc] = useState('null');
 
   useEffect(() => {
-    const fetchUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setLatitude(latitude);
-            setLongitude(longitude);
-            setUserLocation(`latitude:${latitude}, longitude:${longitude}`);
-            fetchWeatherData(latitude, longitude);
-            getReverseGeocodingData(latitude, longitude);
-          },
-          (error) => {
-            console.error('Error getting user location:', error);
-          }
-        );
-      } else {
-        console.error('Geolocation is not supported by this browser.');
-      }
-    };
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLatitude(latitude);
+          setLongitude(longitude);
+          setUserLocation(`latitude:${latitude}, longitude:${longitude}`);
+          fetchWeatherData(latitude, longitude);
+          getReverseGeocodingData(latitude, longitude);
+        },
+        (error) => {
+          console.error('Error getting user location:', error);
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
 
-    fetchUserLocation();
     const intervalId = setInterval(() => {
       fetchWeatherData(latitude, longitude);
       getReverseGeocodingData(latitude, longitude);
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [latitude, longitude]);
 
   const fetchWeatherData = async (latitude, longitude) => {
     try {
@@ -54,39 +54,30 @@ function App() {
       const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
       const response = await axios.get(apiUrl);
       setWeatherData(response.data);
-      console.log(weatherData)
-    } catch (error) {
+
+      } catch (error) {
       console.error('Error loading Weather Data:', error);
-      alert("Error loading Weather Data due to Bad Network")
     }
   };
 
   const getReverseGeocodingData = async (latitude, longitude) => {
     try {
       const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-  
-      if (response.status === 200 && response.data) {
+
+      if (response.data) {
         const address = response.data.address;
         const city = address.city || address.town || address.village || address.hamlet || address.locality || '';
         const country = address.country || '';
         const state = address.state || '';
-  
+        
         setAddressData({ city, country, state });
-       
       } else {
-        console.error('No data found for the given coordinates.');
+        throw new Error('No results found for the given coordinates.');
       }
     } catch (error) {
       console.error('Error fetching reverse geocoding data:', error);
-      alert("Error fetching user Location  due to Bad Network")
-      console.log(userLocation);
-      console.log(addressData);
-     
     }
   };
-  
-  
-
 
   const renderWeatherDescription = () => {
     if (weatherData && weatherData.weather && weatherData.weather.length > 0) {
@@ -94,6 +85,7 @@ function App() {
     }
     return null;
   };
+
 
   const renderWeatherTemp = () => {
     if (weatherData && weatherData.main && weatherData.main.temp) {
@@ -104,27 +96,34 @@ function App() {
 
   const renderWeatherWind = () => {
     if (weatherData && weatherData.wind && weatherData.wind.speed) {
-      return <h1>{weatherData.wind.speed} m/s</h1>;
-    }
-    return null;
-  };
+      console.log("Wind Speed:", weatherData.wind.speed); // Debugging statement
+      return <h1>{weatherData.wind.speed} m/s</h1>; // Render wind speed with units
+    } else {
 
-  const renderWeatherPressure = () => {
-    if (weatherData && weatherData.main && weatherData.main.pressure) {
-      const pressure = weatherData.main.pressure;
-      return <h1>{pressure} hPa</h1>;
+    console.log("wind speed unavaliable")
+     
+       
     }
-    return null;
-  };
+      return null;
+    };
 
-  const renderWeatherRainVolume = () => {
-    if (weatherData && weatherData.rain && weatherData.rain['1h']) {
-      const rainVolume = weatherData.rain['1h'];
-      return <h1>{rainVolume} mm/h</h1>;
-    }
-    return null;
-  };
+    const renderWeatherPressure = () => {
+      if (weatherData && weatherData.main && weatherData.main.pressure) {
+        const pressure = weatherData.main.pressure;
+        return <h1>{pressure} hPa</h1>;
+      }
+      return null;
+    };
+  
+    const renderWeatherRainVolume = () => {
+  if (weatherData && weatherData.rain && weatherData.rain['1h']) {
+    const rainVolume = weatherData.rain['1h'];
+    return <h1>{rainVolume} mm/h</h1>;
+  }
+  return null;
+};
 
+  
   const renderWeatherHumidity = () => {
     if (weatherData && weatherData.main && weatherData.main.humidity) {
       return <h1>{weatherData.main.humidity} %</h1>;
@@ -134,15 +133,19 @@ function App() {
 
   const renderVisibility = () => {
     if (weatherData && weatherData.visibility) {
-      const visibility = weatherData.visibility / 1000;
+      // Visibility is typically provided in meters
+      const visibility = weatherData.visibility / 1000; // Convert meters to kilometers
       return <h1>{visibility} km</h1>;
     }
     return null;
   };
+  
+  
+  
 
   const renderCity = () => {
     if (addressData.city) {
-      return <h1>{addressData.city}</h1>;
+      return <h1>{addressData.city}  </h1>;
     }
     return null;
   };
@@ -161,29 +164,42 @@ function App() {
     return null;
   };
 
+
+
+
+
   useEffect(() => {
     const updateImageSrc = () => {
-      const element = document.getElementById('weatherDescription');
-      const image = document.getElementById('weatherImage');
+      // Select the element by its id or class
+      const element = document.getElementById('weatherDescription'); 
+        const image = document.getElementById('weatherimage')
 
+        
+  
       if (element) {
         const textContent = element.textContent.toLowerCase();
         if (textContent.includes('rain')) {
           setImageSrc(RainCloud);
+
         } else if (textContent.includes('cloud')) {
           setImageSrc(SunnyRain);
+
         } else if (textContent.includes('sun')) {
           setImageSrc(Sun);
+
         } else {
           setImageSrc(null);
         }
       }
     };
 
+    // Call the updateImageSrc function initially and every 5 seconds
     updateImageSrc();
-    const intervalId = setInterval(updateImageSrc, 5000);
+    const intervalId = setInterval(updateImageSrc, 5000); // 5000 milliseconds = 5 seconds
+
+    // Cleanup function to clear the interval on component unmount
     return () => clearInterval(intervalId);
-  }, []);
+  }, []); // Run this effect only once on component mount
 
   return (
     <div className="App">
