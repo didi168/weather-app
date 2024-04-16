@@ -4,14 +4,14 @@ import mapBackground from '../src/images/map-background.png';
 // Create a styled component
 const Header = styled.header`
   margin: 0 auto;
-  padding: 10px;
+  padding: 5px;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   
   #home{
-    width:82%;
+    width:90%;
   
   }
   
@@ -30,7 +30,7 @@ const ListItem = styled.li`
 `;
 
 const Icon = styled.i`
-  margin-inline: 10px;
+  margin-inline: 2px;
 `;
 
 const FirstSection = styled.div`
