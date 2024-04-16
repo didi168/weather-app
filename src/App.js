@@ -183,16 +183,63 @@ function App() {
   }, []);
 
 
+  useEffect(() => {
+    const body = document.body;
+    const divs = document.querySelectorAll("div");
+    const sections = document.querySelectorAll("section");
 
+    const toggleColorMode = () => {
+      // Check current background color and toggle
+      if (body.style.filter === 'grayscale(100%)') {
+        body.style.filter = 'none';
+      } else {
+        body.style.filter = 'grayscale(100%)';
+      }
+
+
+      divs.forEach(div => {
+        if (div.style.filter === 'grayscale(100%)') {
+          div.style.filter = 'none';
+        } else {
+          div.style.filter = 'grayscale(100%)';
+        }
+      });
+
+      sections.forEach(section => {
+        if (section.style.filter === 'grayscale(100%)') {
+          section.style.filter = 'none';
+        } else {
+          section.style.filter = 'grayscale(100%)';
+        }
+      });
+
+    };
+
+    
+
+    // Function to handle icon click
+    const handleIconClick = () => {
+      toggleColorMode();
+    };
+
+    // Add event listener to the icon
+    const icon = document.getElementById("darkModeIcon"); // Replace 'iconId' with the actual id of your icon element
+    icon.addEventListener('click', handleIconClick);
+
+    return () => {
+      // Cleanup: remove event listener
+      icon.removeEventListener('click', handleIconClick);
+    };
+  }, []); // Dependency array is empty as this effect should run only once
 
 
 
   return (
-    <div className="App">
+    <div className="App" >
       <Header>
         <ListItem id='home'><Icon className="fa-solid fa-house" />Home</ListItem>
         <ListItem><Icon className="fa-brands fa-searchengin" /></ListItem>
-        <ListItem><Icon className="fa-solid fa-moon" id='darkModeIcon' /></ListItem>
+        <ListItem><Icon className="fa-solid fa-moon" id='darkModeIcon'/></ListItem>
         <ListItem><Icon className="fa-solid fa-user" /></ListItem>
       </Header>
       <FirstSection>
