@@ -11,13 +11,13 @@ import Sun from '../src/images/sun.png';
 
 
 
-
 function App() {
 
   const [userLocation, setUserLocation] = useState('');
   const [weatherData, setWeatherData] = useState(null);
   const [addressData, setAddressData] = useState({ city: '', country: '', state: '' });
   const [imageSrc, setImageSrc] = useState(null);
+  const [colorMode, setColorMode] = useState(null);
 
   useEffect(() => {
     const fetchDataAndLocation = () => {
@@ -54,6 +54,8 @@ function App() {
       setImageSrc(getWeatherImage(response.data?.current?.condition?.text));
     } catch (error) {
       console.error('Error loading Weather Data:', error);
+      console.log(weatherData)
+      console.log(latitude)
       // Display an error message to the user
     }
   };
@@ -190,6 +192,7 @@ function App() {
       <Header>
         <ListItem id='home'><Icon className="fa-solid fa-house" />Home</ListItem>
         <ListItem><Icon className="fa-brands fa-searchengin" /></ListItem>
+        <ListItem><Icon className="fa-solid fa-moon" id='darkModeIcon' /></ListItem>
         <ListItem><Icon className="fa-solid fa-user" /></ListItem>
       </Header>
       <FirstSection>
