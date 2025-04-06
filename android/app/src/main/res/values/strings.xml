@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Dues Soft Weather App</string>
+    <string name="title_activity_main">Dues Soft Weather App</string>
+    <string name="package_name">com.duessoftweather.app</string>
+    <string name="custom_url_scheme">com.duessoftweather.app</string>
+</resources>
